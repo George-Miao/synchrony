@@ -1,14 +1,97 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
+//! A library that provides both sync and unsync versions of common
+//! synchronization primitives.
+//!
+//! # Example
+//!
+//! If you're a library author, a common pattern is to provide a feature gate
+//! that let users to choose whether they want multithread or not:
+//!
+//! ```toml
+//! # cargo.toml
+//! [dependencies]
+//! synchrony = { version = "0.1.0", feature = ["mutex"] }
+//!
+//! [features]
+//! sync_foo = []
+//! ```
+//!
+//! and in your code:
+//!
+//! ```ignore
+//! #[cfg(feature = "sync_foo")]
+//! use synchrony::sync;
+//! #[cfg(not(feature = "sync_foo"))]
+//! use synchrony::unsync as sync;
+//!
+//! struct Foo {
+//!     lock: sync::mutex::Mutex,
+//!     count: sync::atomic::AtomicUsize,
+//! }
+//! ```
+//!
+//! Or you can also hand-pick sync/unsync primitives:
+//!
+//! ```ignore
+//! use synchrony::*;
+//!
+//! let unsync_lock = unsync::bilock::BiLock::new(42);
+//! let sync_counter = sync::atomic::AtomicUsize::new(42);
+//! ```
+#![cfg_attr(docsrs, feature(doc_cfg))]
+#![warn(missing_docs)]
+#![deny(rustdoc::broken_intra_doc_links)]
+
+#[cfg(feature = "mutex")]
+mod mutex;
+
+#[cfg(feature = "waker_slot")]
+mod waker_slot;
+
+#[cfg(feature = "event")]
+mod event;
+
+mod atomic;
+mod bilock;
+mod flag;
+mod mutex_blocking;
+mod shared;
+
+/// Multithreaded version of primitives
+pub mod sync {
+    /// Multithreaded `Watch` channel based on [`see`].
+    #[doc(inline)]
+    #[cfg(feature = "watch")]
+    pub use see::sync as watch;
+
+    #[doc(inline)]
+    #[cfg(feature = "mutex")]
+    pub use crate::mutex::sync as mutex;
+    #[doc(inline)]
+    #[cfg(feature = "waker_slot")]
+    pub use crate::waker_slot::sync as waker_slot;
+    #[doc(inline)]
+    pub use crate::{
+        atomic::sync as atomic, bilock::sync as bilock, event::sync as event, flag::sync as flag,
+        mutex_blocking::sync as mutex_blocking, shared::sync as shared,
+    };
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+/// Singlethreaded version of primitives
+pub mod unsync {
+    /// Singlethreaded `Watch` channel based on [`see`].
+    #[doc(inline)]
+    #[cfg(feature = "watch")]
+    pub use see::unsync as watch;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+    #[doc(inline)]
+    #[cfg(feature = "mutex")]
+    pub use crate::mutex::unsync as mutex;
+    #[doc(inline)]
+    #[cfg(feature = "waker_slot")]
+    pub use crate::waker_slot::unsync as waker_slot;
+    #[doc(inline)]
+    pub use crate::{
+        atomic::unsync as atomic, bilock::unsync as bilock, event::unsync as event,
+        flag::unsync as flag, mutex_blocking::unsync as mutex_blocking, shared::unsync as shared,
+    };
 }
