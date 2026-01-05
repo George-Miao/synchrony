@@ -24,8 +24,8 @@
 //! use synchrony::unsync as sync;
 //!
 //! struct Foo {
-//!     lock: sync::Mutex,
-//!     count: sync::AtomicUsize,
+//!     lock: sync::mutex::Mutex,
+//!     count: sync::atomic::AtomicUsize,
 //! }
 //! ```
 //!
@@ -35,7 +35,7 @@
 //! use synchrony::*;
 //!
 //! let unsync_lock = unsync::bilock::BiLock::new(42);
-//! let sync_counter = unsync::atomic::AtomicUsize::new(42);
+//! let sync_counter = sync::atomic::AtomicUsize::new(42);
 //! ```
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![warn(missing_docs)]

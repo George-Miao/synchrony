@@ -1,7 +1,7 @@
 //! A slot holds up to one waker for task wakeup.
 //!
 //! `sync` version is just [`futures::task::AtomicWaker`]; unsync version is a
-//! hand-role singlethreaded version with similar API.
+//! hand-rolled singlethreaded version with similar API.
 
 /// Multithreaded `WakerSlot` based on [`futures::task::AtomicWaker`].
 pub mod sync {
@@ -12,7 +12,7 @@ pub mod sync {
 pub mod unsync {
     use std::{cell::RefCell, task::Waker};
 
-    /// A singlethreaded regsitry holds up to one waker for task wakeup.
+    /// A singlethreaded registry holds up to one waker for task wakeup.
     #[derive(Debug, Default)]
     pub struct WakerSlot {
         waker: RefCell<Option<Waker>>,

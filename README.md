@@ -9,7 +9,7 @@ All of the following primitives are provided in both sync and unsync versions:
 - Shared (`Rc`/`Arc`)
 - Atomic Scalars
 - Watch 
-- Waker Lot (`AtomicWaker` and its unsync counterpart)
+- Waker Slot (`AtomicWaker` and its unsync counterpart)
 - Mutex
 - Async Mutex
 - BiLock

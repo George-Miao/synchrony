@@ -106,7 +106,7 @@ pub mod unsync {
     pub struct MutexGuard<'a, T: ?Sized>(InnerGuard<'a, T>);
 
     impl<'a, T: ?Sized> MutexGuard<'a, T> {
-        /// Get the inner [`std::sync::MutexGuard`].
+        /// Get the inner [`std::cell::RefMut`].
         pub fn into_inner(self) -> InnerGuard<'a, T> {
             self.0
         }

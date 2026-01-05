@@ -274,7 +274,7 @@ macro_rules! atomic_int {
                 self.v.replace(self.v.get() + val)
             }
 
-            /// Substract to the current value, returning the previous value.
+            /// Subtract to the current value, returning the previous value.
             pub fn fetch_sub(&self, val: $i, _: Ordering) -> $i {
                 self.v.replace(self.v.get() - val)
             }
