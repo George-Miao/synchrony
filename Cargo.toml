@@ -1,0 +1,9 @@
+[package]
+name = "synchrony"
+version = "0.1.0-pre.0"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/compio-rs/synchrony"
+description = "A library that provides both sync and unsync versions of common synchronization primitives."
+
+[dependencies]
