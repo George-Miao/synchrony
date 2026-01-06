@@ -41,17 +41,16 @@
 #![warn(missing_docs)]
 #![deny(rustdoc::broken_intra_doc_links)]
 
+#[cfg(feature = "bilock")]
+mod bilock;
+#[cfg(feature = "event")]
+mod event;
 #[cfg(feature = "mutex")]
 mod mutex;
-
 #[cfg(feature = "waker_slot")]
 mod waker_slot;
 
-#[cfg(feature = "event")]
-mod event;
-
 mod atomic;
-mod bilock;
 mod flag;
 mod mutex_blocking;
 mod shared;
@@ -64,6 +63,12 @@ pub mod sync {
     pub use see::sync as watch;
 
     #[doc(inline)]
+    #[cfg(feature = "bilock")]
+    pub use crate::bilock::sync as bilock;
+    #[doc(inline)]
+    #[cfg(feature = "event")]
+    pub use crate::event::sync as event;
+    #[doc(inline)]
     #[cfg(feature = "mutex")]
     pub use crate::mutex::sync as mutex;
     #[doc(inline)]
@@ -71,8 +76,8 @@ pub mod sync {
     pub use crate::waker_slot::sync as waker_slot;
     #[doc(inline)]
     pub use crate::{
-        atomic::sync as atomic, bilock::sync as bilock, event::sync as event, flag::sync as flag,
-        mutex_blocking::sync as mutex_blocking, shared::sync as shared,
+        atomic::sync as atomic, flag::sync as flag, mutex_blocking::sync as mutex_blocking,
+        shared::sync as shared,
     };
 }
 
@@ -84,6 +89,12 @@ pub mod unsync {
     pub use see::unsync as watch;
 
     #[doc(inline)]
+    #[cfg(feature = "bilock")]
+    pub use crate::bilock::unsync as bilock;
+    #[doc(inline)]
+    #[cfg(feature = "event")]
+    pub use crate::event::unsync as event;
+    #[doc(inline)]
     #[cfg(feature = "mutex")]
     pub use crate::mutex::unsync as mutex;
     #[doc(inline)]
@@ -91,8 +102,8 @@ pub mod unsync {
     pub use crate::waker_slot::unsync as waker_slot;
     #[doc(inline)]
     pub use crate::{
-        atomic::unsync as atomic, bilock::unsync as bilock, event::unsync as event,
-        flag::unsync as flag, mutex_blocking::unsync as mutex_blocking, shared::unsync as shared,
+        atomic::unsync as atomic, flag::unsync as flag, mutex_blocking::unsync as mutex_blocking,
+        shared::unsync as shared,
     };
 }
 
