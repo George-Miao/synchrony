@@ -41,6 +41,8 @@
 #![warn(missing_docs)]
 #![deny(rustdoc::broken_intra_doc_links)]
 
+#[cfg(feature = "async_flag")]
+mod async_flag;
 #[cfg(feature = "bilock")]
 mod bilock;
 #[cfg(feature = "event")]
@@ -62,6 +64,9 @@ pub mod sync {
     #[cfg(feature = "watch")]
     pub use see::sync as watch;
 
+    #[doc(inline)]
+    #[cfg(feature = "async_flag")]
+    pub use crate::async_flag::sync as notify;
     #[doc(inline)]
     #[cfg(feature = "bilock")]
     pub use crate::bilock::sync as bilock;
@@ -88,6 +93,9 @@ pub mod unsync {
     #[cfg(feature = "watch")]
     pub use see::unsync as watch;
 
+    #[doc(inline)]
+    #[cfg(feature = "async_flag")]
+    pub use crate::async_flag::unsync as notify;
     #[doc(inline)]
     #[cfg(feature = "bilock")]
     pub use crate::bilock::unsync as bilock;
