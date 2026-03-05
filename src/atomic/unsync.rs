@@ -116,6 +116,22 @@ impl AtomicBool {
         self.compare_exchange(current, new, success, failure)
     }
 
+    /// Fetches the value, and applies a function to it that returns an optional
+    /// new value. Returns a `Result` of `Ok(previous_value)` if the function
+    /// returned `Some(_)`, else `Err(previous_value)`.
+    pub fn fetch_update<F>(&self, _: Ordering, _: Ordering, mut f: F) -> Result<bool, bool>
+    where
+        F: FnMut(bool) -> Option<bool>,
+    {
+        let curr = self.v.get();
+        if let Some(new) = f(curr) {
+            self.v.set(new);
+            Ok(curr)
+        } else {
+            Err(curr)
+        }
+    }
+
     /// Bitwise "and" with the current value.
     ///
     /// Performs a bitwise "and" operation on the current value and the argument
@@ -271,6 +287,23 @@ macro_rules! atomic_int {
                 failure: Ordering,
             ) -> Result<$i, $i> {
                 self.compare_exchange(current, new, success, failure)
+            }
+
+
+            /// Fetches the value, and applies a function to it that returns an optional
+            /// new value. Returns a `Result` of `Ok(previous_value)` if the function
+            /// returned `Some(_)`, else `Err(previous_value)`.
+            pub fn fetch_update<F>(&self, _: Ordering, _: Ordering, mut f: F) -> Result<$i, $i>
+            where
+                F: FnMut($i) -> Option<$i>,
+            {
+                let curr = self.v.get();
+                if let Some(new) = f(curr) {
+                    self.v.set(new);
+                    Ok(curr)
+                } else {
+                    Err(curr)
+                }
             }
 
             /// Adds to the current value, returning the previous value.
