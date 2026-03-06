@@ -118,3 +118,17 @@ pub mod unsync {
 /// A trait to assert that a type is `Send + Sync`.
 #[allow(dead_code)]
 trait AssertMt: Send + Sync {}
+
+macro_rules! cfg_loom {
+    {
+        $vis:vis use $alt:ident :: $($tail:tt)*
+    } => {
+        #[cfg(loom)]
+        $vis use loom::$($tail)*
+
+        #[cfg(not(loom))]
+        $vis use $alt::$($tail)*
+    };
+}
+
+use cfg_loom;

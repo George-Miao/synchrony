@@ -1,5 +1,5 @@
 {
-  description = "Compio dev shell";
+  description = "Synchrony dev shell";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -27,7 +27,9 @@
       {
         devShells.default = mkShell {
           buildInputs = [
+            bacon
             cargo-hack
+            cargo-nextest
             (rust-bin.selectLatestNightlyWith (
               toolchain:
               toolchain.default.override {

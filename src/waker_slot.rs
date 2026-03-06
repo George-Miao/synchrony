@@ -5,7 +5,9 @@
 
 /// Multithreaded `WakerSlot` based on [`futures_util::task::AtomicWaker`].
 pub mod sync {
-    pub use futures_util::task::AtomicWaker as WakerSlot;
+    crate::cfg_loom! {
+        pub use futures_util::task::AtomicWaker as WakerSlot;
+    }
 
     impl crate::AssertMt for WakerSlot {}
 }

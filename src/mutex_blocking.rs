@@ -2,10 +2,12 @@
 
 /// Multithreaded blocking Mutex
 pub mod sync {
+    crate::cfg_loom! {
+        use std::sync::{Mutex as Inner, MutexGuard as InnerGuard};
+    }
     use std::{
         fmt,
         ops::{Deref, DerefMut},
-        sync::{Mutex as Inner, MutexGuard as InnerGuard},
     };
 
     /// A multithreaded Mutex based on [`std::sync::Mutex`].
@@ -19,7 +21,16 @@ pub mod sync {
 
     impl<T> Mutex<T> {
         /// Creates a new mutex in an unlocked state ready for use.
+        #[cfg(not(loom))]
         pub const fn new(val: T) -> Self {
+            Self(Inner::new(val))
+        }
+
+        /// Creates a new mutex in an unlocked state ready for use.
+        ///
+        /// This `new` is not `const` due to loom not supporting it.
+        #[cfg(loom)]
+        pub fn new(val: T) -> Self {
             Self(Inner::new(val))
         }
 

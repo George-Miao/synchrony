@@ -79,7 +79,6 @@ const WAIT_KEY_NONE: usize = usize::MAX;
 macro_rules! impl_mutex {
     ($sync:ident) => {
         use std::{
-            cell::UnsafeCell,
             fmt,
             future::Future,
             marker::PhantomData,
@@ -93,6 +92,11 @@ macro_rules! impl_mutex {
         use slab::Slab;
 
         use super::*;
+
+        crate::cfg_loom! {
+            use std::cell::UnsafeCell;
+        }
+
         use crate::$sync::{
             atomic::AtomicUsize, mutex_blocking::Mutex as BlockingMutex, shared::Shared,
         };

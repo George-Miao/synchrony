@@ -1,4 +1,8 @@
-use std::{cell::Cell, fmt::Debug, sync::atomic::Ordering};
+use std::{fmt::Debug, sync::atomic::Ordering};
+
+crate::cfg_loom! {
+    use std::cell::Cell;
+}
 
 atomic_int!(AtomicU8(u8));
 atomic_int!(AtomicU16(u16));
@@ -41,11 +45,19 @@ impl Debug for AtomicBool {
 
 impl AtomicBool {
     /// Creates a new [`AtomicBool`]
+    #[cfg(not(loom))]
     pub const fn new(val: bool) -> Self {
         Self { v: Cell::new(val) }
     }
 
+    /// Creates a new [`AtomicBool`]
+    #[cfg(loom)]
+    pub fn new(val: bool) -> Self {
+        Self { v: Cell::new(val) }
+    }
+
     /// Returns a mutable reference to the underlying boolean.
+    #[cfg(not(loom))]
     pub fn get_mut(&mut self) -> &mut bool {
         self.v.get_mut()
     }
@@ -195,12 +207,20 @@ macro_rules! atomic_int {
         }
 
         impl $t {
+            #[cfg(not(loom))]
             #[doc = concat!("Creates a new [`", stringify!($t), "`]")]
             pub const fn new(val: $i) -> Self {
                 Self { v: Cell::new(val) }
             }
 
+            #[cfg(loom)]
+            #[doc = concat!("Creates a new [`", stringify!($t), "`]")]
+            pub fn new(val: $i) -> Self {
+                Self { v: Cell::new(val) }
+            }
+
             /// Returns a mutable reference to the underlying integer.
+            #[cfg(not(loom))]
             pub fn get_mut(&mut self) -> &mut $i {
                 self.v.get_mut()
             }

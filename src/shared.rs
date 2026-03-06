@@ -7,7 +7,9 @@
 ///
 /// [`Shared`]: sync::Shared
 pub mod sync {
-    pub use std::sync::Arc as Shared;
+    crate::cfg_loom! {
+        pub use std::sync::Arc as Shared;
+    }
 }
 
 /// Singlethreaded [`Shared`] based on [`std::rc::Rc`]

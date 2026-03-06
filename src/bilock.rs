@@ -18,13 +18,16 @@ pub mod unsync {
 macro_rules! impl_bilock {
     ($sync:ident) => {
         use std::{
-            cell::UnsafeCell,
             fmt::Debug,
             future::Future,
             ops::{Deref, DerefMut},
             pin::Pin,
             task::{Context, Poll},
         };
+
+        crate::cfg_loom! {
+            use std::cell::UnsafeCell;
+        }
 
         use crate::$sync::{flag::Flag, shared::Shared, waker_slot::WakerSlot};
 
