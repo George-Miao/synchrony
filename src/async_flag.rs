@@ -106,6 +106,7 @@ macro_rules! impl_notify {
         }
 
         /// A wake up handle to [`AsyncFlag`].
+        #[derive(Debug, Clone)]
         pub struct AsyncFlagHandle {
             flag: AsyncFlagImpl,
         }
